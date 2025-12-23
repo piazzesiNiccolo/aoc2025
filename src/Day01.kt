@@ -1,21 +1,68 @@
+const val MOD = 100
+enum class Direction {
+    Left,Right
+}
+data class Iteration(val direction: Direction, val value: Int)
+fun parseDirection(line: String): Iteration =
+    if (line.startsWith("R"))
+        Iteration(Direction.Right, line.substring(1).toInt())
+    else
+        Iteration(direction = Direction.Left, value = line.substring(1).toInt())
+
 fun main() {
     fun part1(input: List<String>): Int {
-        return input.size
+        var current = 50
+        var count = 0
+        input.map(::parseDirection).forEach { dir ->
+            current = when (dir.direction) {
+                Direction.Left -> (current - dir.value).positiveModulo(MOD)
+                Direction.Right -> (current + dir.value).positiveModulo(MOD)
+            }
+            if (current == 0) count++
+        }
+        return count
     }
 
     fun part2(input: List<String>): Int {
-        return input.size
+        var current = 50
+        var count = 0
+        input.map(::parseDirection).forEach { dir ->
+            val mod = dir.value % MOD
+            val iterations = dir.value / MOD
+            count += iterations
+            if (mod != 0) {
+                val prev = current
+                val op = when (dir.direction) {
+                    Direction.Right -> { x: Int, y: Int -> x + y }
+                    Direction.Left -> { x: Int, y: Int -> x - y }
+                }
+                current = op(current, mod)
+                if (current <= 0 && 0 < prev && dir.direction == Direction.Left) count++
+                if (current >= MOD && dir.direction == Direction.Right) count++
+                current = current.positiveModulo(MOD)
+            }
+
+        }
+        return count
     }
 
-    // Test if implementation meets criteria from the description, like:
-    check(part1(listOf("test_input")) == 1)
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     val testInput = readInput("Day01_test")
-    check(part1(testInput) == 1)
+    val part1 = part1(testInput)
+    val part2 = part2(testInput)
+    println("Part1: $part1")
+    println("Part2: $part2")
+    check(part1 == 3)
+    check(part2 == 6)
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
     part1(input).println()
     part2(input).println()
+}
+
+fun Int.positiveModulo(mod: Int): Int {
+    val result = this % mod
+    return if (result < 0) result + mod else result
 }
