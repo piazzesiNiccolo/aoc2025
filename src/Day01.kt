@@ -57,7 +57,8 @@ fun main() {
 
     // Or read a large test input from the `src/Day01_test.txt` file:
     performTest(
-        fileName = "Day01_test",
+        testFileName = "Day01_test",
+        actualFileName = "Day01",
         part1 = ::part1,
         part2 = ::part2,
         expectedPart1 = 3,
