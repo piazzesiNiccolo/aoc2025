@@ -1,7 +1,7 @@
 
 
-val regexPart1 = "(^\\d+)(\\1)$".toRegex()
-val regexPart2 = "^(\\d+)(\\1)+$".toRegex()
+private val regexPart1 = "(^\\d+)(\\1)$".toRegex()
+private val regexPart2 = "^(\\d+)(\\1)+$".toRegex()
 fun main() {
     fun part1(input: List<String>): Long {
         return input
