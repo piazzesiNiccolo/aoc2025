@@ -1,9 +1,17 @@
-const val MOD = 100
-enum class Direction {
-    Left,Right
+private const val MOD = 100
+
+private enum class Direction {
+    Left, Right
 }
-data class Iteration(val direction: Direction, val value: Int)
-fun parseDirection(line: String): Iteration =
+
+private fun Int.positiveModulo(mod: Int): Int {
+    val result = this % mod
+    return if (result < 0) result + mod else result
+}
+
+private data class Iteration(val direction: Direction, val value: Int)
+
+private fun parseDirection(line: String): Iteration =
     if (line.startsWith("R"))
         Iteration(Direction.Right, line.substring(1).toInt())
     else
@@ -48,21 +56,16 @@ fun main() {
 
 
     // Or read a large test input from the `src/Day01_test.txt` file:
-    val testInput = readInput("Day01_test")
-    val part1 = part1(testInput)
-    val part2 = part2(testInput)
-    println("Part1: $part1")
-    println("Part2: $part2")
-    check(part1 == 3)
-    check(part2 == 6)
+    performTest(
+        fileName = "Day01_test",
+        part1 = ::part1,
+        part2 = ::part2,
+        expectedPart1 = 3,
+        expectedPart2 = 6
+    )
 
     // Read the input from the `src/Day01.txt` file.
     val input = readInput("Day01")
     part1(input).println()
     part2(input).println()
-}
-
-fun Int.positiveModulo(mod: Int): Int {
-    val result = this % mod
-    return if (result < 0) result + mod else result
 }

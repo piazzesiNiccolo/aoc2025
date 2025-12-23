@@ -8,6 +8,12 @@ sourceSets {
     }
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(11))
+    }
+}
+
 tasks {
     wrapper {
         gradleVersion = "9.2.1"

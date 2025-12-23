@@ -19,3 +19,19 @@ fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteA
  * The cleaner shorthand for printing output.
  */
 fun Any?.println() = println(this)
+
+fun <T> performTest(
+    fileName: String,
+    part1: (List<String>) -> T,
+    part2: (List<String>) -> T,
+    expectedPart1: T,
+    expectedPart2: T
+) {
+    val testInput = readInput(fileName)
+    val part1 = part1(testInput)
+    val part2 = part2(testInput)
+    println("Part1: expected: $expectedPart1, got: $part1")
+    println("Part2: expected: $expectedPart2, got: $part2")
+    check(part1 == expectedPart1)
+    check(part2 == expectedPart2)
+}
