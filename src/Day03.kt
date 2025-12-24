@@ -1,5 +1,3 @@
-import kotlin.math.max
-
 private fun combine(a: Long, b: Long): Long {
     return a*10+b
 }
@@ -31,8 +29,21 @@ fun main() {
     }
 
     fun part2(input: List<String>): Long {
-        return 0L
-
+        return input.sumOf {
+            var line = it
+            val chars = mutableListOf<Char>()
+            for (i in 0..<12) {
+                var left = 0
+                for(j in 1..<(line.length- (12 - i) + 1)) {
+                    if (line[j] > line[left]) {
+                        left = j
+                    }
+                }
+                chars.add(line[left])
+                line = line.slice(left+1..<line.length)
+            }
+            String(chars.toCharArray()).toLong()
+        }
     }
 
     performTest(
@@ -41,7 +52,7 @@ fun main() {
         part1 = ::part1,
         part2 = ::part2,
         expectedPart1 = 357L,
-        expectedPart2 = 0L,
+        expectedPart2 = 3121910778619L,
     )
 }
 

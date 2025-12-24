@@ -2,6 +2,7 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.pow
 
 /**
  * Reads lines from the given input txt file.
@@ -34,16 +35,10 @@ fun <T> performTest(
     val part1 = part1(testInput)
     val part2 = part2(testInput)
     println("Part1: expected: $expectedPart1, got: $part1")
-    println(part1 == expectedPart1)
     check(part1 == expectedPart1)
     println("Part2: expected: $expectedPart2, got: $part2")
     check(part2 == expectedPart2)
     val input = readInput(actualFileName, separator)
-    part1(input).println()
     part2(input).println()
 
-}
-
-fun String.splitAtIndex(index: Int) = require(index in 0..length).let {
-    take(index) to substring(index)
 }
