@@ -2,7 +2,6 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
-import kotlin.math.pow
 
 /**
  * Reads lines from the given input txt file.
@@ -39,6 +38,34 @@ fun <T> performTest(
     println("Part2: expected: $expectedPart2, got: $part2")
     check(part2 == expectedPart2)
     val input = readInput(actualFileName, separator)
+    part1(input).println()
     part2(input).println()
 
+}
+
+// ==== Graph like utils ====
+
+data class Coordinate(val x: Int, val y: Int)
+
+fun List<String>.parseCoordinates(marker: String): MutableSet<Coordinate> {
+    val set = mutableSetOf<Coordinate>()
+    for ((i, s) in this.withIndex()) {
+        for((j, c) in s.withIndex()) {
+            if (c.toString() == marker) {
+                set.add(Coordinate(i, j))
+            }
+        }
+    }
+    return set
+
+}
+
+fun Coordinate.adjacent8()  = iterator {
+    val (x, y) = this@adjacent8.x to this@adjacent8.y
+    for (i in (-1..1)) {
+        for (j in (-1..1)) {
+            if (i == 0 && j == 0) { continue; }
+            yield(Coordinate(x+i, y+j))
+        }
+    }
 }
