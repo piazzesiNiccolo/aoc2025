@@ -3,22 +3,17 @@ import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
 
-/**
- * Reads lines from the given input txt file.
- */
-fun readInput(name: String,separator: String = "\n") = Path("src/$name.txt").readText().trim().split(separator)
+/** Reads lines from the given input txt file. */
+fun readInput(name: String, separator: String = "\n") =
+    Path("src/$name.txt").readText().trim().split(separator)
 
+/** Converts string to md5 hash. */
+fun String.md5() =
+    BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
+        .toString(16)
+        .padStart(32, '0')
 
-/**
- * Converts string to md5 hash.
- */
-fun String.md5() = BigInteger(1, MessageDigest.getInstance("MD5").digest(toByteArray()))
-    .toString(16)
-    .padStart(32, '0')
-
-/**
- * The cleaner shorthand for printing output.
- */
+/** The cleaner shorthand for printing output. */
 fun Any?.println() = println(this)
 
 fun <T> performTest(
@@ -28,19 +23,18 @@ fun <T> performTest(
     part2: (List<String>) -> T,
     expectedPart1: T,
     expectedPart2: T,
-    separator: String = "\n"
+    separator: String = "\n",
 ) {
-    val testInput = readInput(testFileName,separator)
-    val part1 = part1(testInput)
-    val part2 = part2(testInput)
-    println("Part1: expected: $expectedPart1, got: $part1")
-    check(part1 == expectedPart1)
-    println("Part2: expected: $expectedPart2, got: $part2")
-    check(part2 == expectedPart2)
-    val input = readInput(actualFileName, separator)
-    part1(input).println()
-    part2(input).println()
-
+  val testInput = readInput(testFileName, separator)
+  val part1 = part1(testInput)
+  val part2 = part2(testInput)
+  println("Part1: expected: $expectedPart1, got: $part1")
+  check(part1 == expectedPart1)
+  println("Part2: expected: $expectedPart2, got: $part2")
+  check(part2 == expectedPart2)
+  val input = readInput(actualFileName, separator)
+  part1(input).println()
+  part2(input).println()
 }
 
 // ==== Graph like utils ====
@@ -48,24 +42,25 @@ fun <T> performTest(
 data class Coordinate(val x: Int, val y: Int)
 
 fun List<String>.parseCoordinates(marker: String): MutableSet<Coordinate> {
-    val set = mutableSetOf<Coordinate>()
-    for ((i, s) in this.withIndex()) {
-        for((j, c) in s.withIndex()) {
-            if (c.toString() == marker) {
-                set.add(Coordinate(i, j))
-            }
-        }
+  val set = mutableSetOf<Coordinate>()
+  for ((i, s) in this.withIndex()) {
+    for ((j, c) in s.withIndex()) {
+      if (c.toString() == marker) {
+        set.add(Coordinate(i, j))
+      }
     }
-    return set
-
+  }
+  return set
 }
 
-fun Coordinate.adjacent8()  = iterator {
-    val (x, y) = this@adjacent8.x to this@adjacent8.y
-    for (i in (-1..1)) {
-        for (j in (-1..1)) {
-            if (i == 0 && j == 0) { continue; }
-            yield(Coordinate(x+i, y+j))
-        }
+fun Coordinate.adjacent8() = iterator {
+  val (x, y) = this@adjacent8.x to this@adjacent8.y
+  for (i in (-1..1)) {
+    for (j in (-1..1)) {
+      if (i == 0 && j == 0) {
+        continue
+      }
+      yield(Coordinate(x + i, y + j))
     }
+  }
 }
