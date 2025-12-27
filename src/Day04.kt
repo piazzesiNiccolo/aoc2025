@@ -36,8 +36,7 @@ fun main() {
   }
 
   performTest(
-      testFileName = "Day04_test",
-      actualFileName = "Day04",
+      fileName = "Day04",
       part1 = ::part1,
       part2 = ::part2,
       expectedPart1 = 13L,

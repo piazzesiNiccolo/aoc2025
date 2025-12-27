@@ -17,22 +17,21 @@ fun String.md5() =
 fun Any?.println() = println(this)
 
 fun <T> performTest(
-    testFileName: String,
-    actualFileName: String,
+    fileName: String,
     part1: (List<String>) -> T,
     part2: (List<String>) -> T,
     expectedPart1: T,
     expectedPart2: T,
     separator: String = "\n",
 ) {
-  val testInput = readInput(testFileName, separator)
+  val testInput = readInput("${fileName}_test", separator)
   val part1 = part1(testInput)
   val part2 = part2(testInput)
   println("Part1: expected: $expectedPart1, got: $part1")
   check(part1 == expectedPart1)
   println("Part2: expected: $expectedPart2, got: $part2")
   check(part2 == expectedPart2)
-  val input = readInput(actualFileName, separator)
+  val input = readInput(fileName, separator)
   part1(input).println()
   part2(input).println()
 }
@@ -63,4 +62,20 @@ fun Coordinate.adjacent8() = iterator {
       yield(Coordinate(x + i, y + j))
     }
   }
+}
+
+// == Interval utilities
+
+fun <T : Comparable<T>> List<Pair<T, T>>.mergeOverlapping(): List<Pair<T, T>> {
+  var res = mutableListOf<Pair<T, T>>()
+  val sorted = this.sortedBy { it.first }
+  res.add(sorted[0])
+  for (other in sorted.slice(1..<sorted.size)) {
+    if (res.last().second >= other.first) {
+      res[res.lastIndex] = res[res.lastIndex].first to maxOf(res.last().second, other.second)
+    } else {
+      res.add(other)
+    }
+  }
+  return res
 }
