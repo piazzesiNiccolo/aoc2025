@@ -2,6 +2,8 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 /** Reads lines from the given input txt file. */
 fun readInput(name: String, separator: String = "\n") =
@@ -38,28 +40,47 @@ fun <T> performTest(
 
 // ==== Graph like utils ====
 
-data class Coordinate(val x: Int, val y: Int)
+data class Coordinate2D(val x: Int, val y: Int)
 
-fun List<String>.parseCoordinates(marker: String): MutableSet<Coordinate> {
-  val set = mutableSetOf<Coordinate>()
+data class Coordinate3D(val x: Int, val y: Int, val z: Int) {
+  companion object {
+    fun fromString(coordinate3D: String): Coordinate3D {
+      val (x, y, z) = coordinate3D.split(",")
+      return Coordinate3D(x.toInt(), y.toInt(), z.toInt())
+    }
+  }
+}
+
+fun Coordinate2D.euclideanDistance(other: Coordinate2D) =
+    sqrt((this.x - other.x).toDouble().pow(2) + (this.y - other.y).toDouble().pow(2))
+
+fun Coordinate3D.euclideanDistance(other: Coordinate3D) =
+    sqrt(
+        (this.x - other.x).toDouble().pow(2) +
+            (this.y - other.y).toDouble().pow(2) +
+            (this.z - other.z).toDouble().pow(2)
+    )
+
+fun List<String>.parseCoordinates(marker: String): MutableSet<Coordinate2D> {
+  val set = mutableSetOf<Coordinate2D>()
   for ((i, s) in this.withIndex()) {
     for ((j, c) in s.withIndex()) {
       if (c.toString() == marker) {
-        set.add(Coordinate(i, j))
+        set.add(Coordinate2D(i, j))
       }
     }
   }
   return set
 }
 
-fun Coordinate.adjacent8() = iterator {
+fun Coordinate2D.adjacent8() = iterator {
   val (x, y) = this@adjacent8.x to this@adjacent8.y
   for (i in (-1..1)) {
     for (j in (-1..1)) {
       if (i == 0 && j == 0) {
         continue
       }
-      yield(Coordinate(x + i, y + j))
+      yield(Coordinate2D(x + i, y + j))
     }
   }
 }
@@ -78,4 +99,8 @@ fun <T : Comparable<T>> List<Pair<T, T>>.mergeOverlapping(): List<Pair<T, T>> {
     }
   }
   return res
+}
+
+fun <T> List<T>.allPairs(): List<Pair<T, T>> = flatMapIndexed { i, a ->
+  drop(i + 1).map { b -> a to b }
 }
