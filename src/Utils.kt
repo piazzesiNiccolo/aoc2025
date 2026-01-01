@@ -2,6 +2,7 @@ import java.math.BigInteger
 import java.security.MessageDigest
 import kotlin.io.path.Path
 import kotlin.io.path.readText
+import kotlin.math.abs
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -40,7 +41,14 @@ fun <T> performTest(
 
 // ==== Graph like utils ====
 
-data class Coordinate2D(val x: Int, val y: Int)
+data class Coordinate2D(val x: Int, val y: Int) {
+  companion object {
+    fun fromString(coordinate3D: String): Coordinate2D {
+      val (x, y) = coordinate3D.split(",")
+      return Coordinate2D(x.toInt(), y.toInt())
+    }
+  }
+}
 
 data class Coordinate3D(val x: Int, val y: Int, val z: Int) {
   companion object {
@@ -50,6 +58,9 @@ data class Coordinate3D(val x: Int, val y: Int, val z: Int) {
     }
   }
 }
+
+fun Coordinate2D.rectangleArea(other: Coordinate2D) =
+    abs((this.x.toLong() - other.x.toLong()) + 1L) * abs((this.y.toLong() - other.y.toLong()) + 1L)
 
 fun Coordinate2D.euclideanDistance(other: Coordinate2D) =
     sqrt((this.x - other.x).toDouble().pow(2) + (this.y - other.y).toDouble().pow(2))
